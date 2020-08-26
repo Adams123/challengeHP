@@ -1,0 +1,72 @@
+package com.dextra.hp.service;
+
+import com.dextra.hp.consumer.HousesFeignRepo;
+import com.dextra.hp.consumer.HpCharactersFeignRepo;
+import com.dextra.hp.consumer.SpellsFeignRepository;
+import com.dextra.hp.entity.House;
+import com.dextra.hp.entity.HpCharacter;
+import com.dextra.hp.entity.Populated;
+import com.dextra.hp.entity.constants.Constants;
+import com.dextra.hp.repository.HouseRepository;
+import com.dextra.hp.repository.HpCharacterRepository;
+import com.dextra.hp.repository.PopulatedRepository;
+import com.dextra.hp.repository.SpellRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Optional;
+
+@Component
+@Slf4j
+public class DbPopulateStartup implements ApplicationListener<ApplicationReadyEvent> {
+
+    private final HpCharactersFeignRepo hpCharactersFeignRepo;
+    private final HousesFeignRepo housesFeignRepo;
+    private final SpellsFeignRepository spellsFeignRepository;
+
+    private final SpellRepository spellRepository;
+    private final HpCharacterRepository hpCharacterRepository;
+    private final HouseRepository houseRepository;
+
+    private final PopulatedRepository populatedRepository;
+
+    public DbPopulateStartup(HpCharactersFeignRepo hpCharactersFeignRepo, HousesFeignRepo housesFeignRepo, SpellsFeignRepository spellsFeignRepository,
+                             SpellRepository spellRepository, HpCharacterRepository hpCharacterRepository, HouseRepository houseRepository, PopulatedRepository populatedRepository) {
+        this.hpCharactersFeignRepo = hpCharactersFeignRepo;
+        this.housesFeignRepo = housesFeignRepo;
+        this.spellsFeignRepository = spellsFeignRepository;
+        this.spellRepository = spellRepository;
+        this.hpCharacterRepository = hpCharacterRepository;
+        this.houseRepository = houseRepository;
+        this.populatedRepository = populatedRepository;
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+        Optional<Populated> populated = populatedRepository.findById(Constants.dbIdentifier);
+        if (populated.isPresent() && populated.get().isPopulated()) {
+            log.debug("DB for {} is already populated, skipping", Constants.dbIdentifier);
+            return;
+        }
+        try {
+            List<House> houses = houseRepository.saveAll(housesFeignRepo.getHouses());
+
+            List<HpCharacter> hpCharacters = hpCharactersFeignRepo.getCharacters();
+            hpCharacters.forEach(entry -> {
+                entry.defineBelongingHouse(houses.stream().filter(house -> house.getName().equals(entry.getHouse())).findFirst().orElse(null));
+            });
+
+            hpCharacterRepository.saveAll(hpCharacters);
+            spellRepository.saveAll(spellsFeignRepository.getSpells());
+            populatedRepository.save(new Populated(Constants.dbIdentifier, true));
+            log.debug("DB {} populated successfully", Constants.dbIdentifier);
+
+        } catch (Exception e) {
+            populatedRepository.save(new Populated(Constants.dbIdentifier, false));
+            log.error("Failed to initialize db repository with API data.", e);
+        }
+    }
+}

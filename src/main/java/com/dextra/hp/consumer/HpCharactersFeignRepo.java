@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class CharactersRepository {
+public class HpCharactersFeignRepo {
 
     public final CharactersConsumer charactersConsumer;
 
-    public CharactersRepository(CharactersConsumer charactersConsumer) {
+    public HpCharactersFeignRepo(CharactersConsumer charactersConsumer) {
         this.charactersConsumer = charactersConsumer;
     }
 

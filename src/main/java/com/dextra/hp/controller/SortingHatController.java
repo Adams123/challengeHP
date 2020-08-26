@@ -1,18 +1,18 @@
 package com.dextra.hp.controller;
 
-import com.dextra.hp.consumer.SortingHatRepository;
+import com.dextra.hp.consumer.SortingHatFeignRepo;
 import com.dextra.hp.entity.HouseName;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/sortingHat")
+@RequestMapping("/api/sortingHat")
 public class SortingHatController {
 
-    public final SortingHatRepository sortingHatConsumer;
+    public final SortingHatFeignRepo sortingHatConsumer;
 
-    public SortingHatController(SortingHatRepository sortingHatConsumer) {
+    public SortingHatController(SortingHatFeignRepo sortingHatConsumer) {
         this.sortingHatConsumer = sortingHatConsumer;
     }
 

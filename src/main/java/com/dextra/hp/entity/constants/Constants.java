@@ -7,4 +7,6 @@ public class Constants {
     @Value("${baseUrl}")
     public String BASE_URL;
 
+    public static final String dbIdentifier = "DEXTRA DB"; //TODO get from connection settings or deploy env
+
 }

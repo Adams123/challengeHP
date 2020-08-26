@@ -4,11 +4,11 @@ import com.dextra.hp.entity.HouseName;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SortingHatRepository {
+public class SortingHatFeignRepo {
 
     private final SortingHatConsumer sortingHatConsumer;
 
-    public SortingHatRepository(SortingHatConsumer sortingHatConsumer) {
+    public SortingHatFeignRepo(SortingHatConsumer sortingHatConsumer) {
         this.sortingHatConsumer = sortingHatConsumer;
     }
 

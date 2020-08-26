@@ -3,7 +3,7 @@ package com.dextra.hp.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
-import java.util.List;
+import javax.persistence.Entity;
 
 @Data
 @Builder
@@ -11,10 +11,10 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Spell {
-    private String _id;
+@EqualsAndHashCode(callSuper = true)
+@Entity
+public class Spell extends BaseEntity{
     private String spell;
     private String type;
     private String effect;
-    private float __v;
 }

@@ -6,11 +6,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class HousesRepository {
+public class HousesFeignRepo {
 
     private final HousesConsumer housesConsumer;
 
-    public HousesRepository(HousesConsumer housesConsumer) {
+    public HousesFeignRepo(HousesConsumer housesConsumer) {
         this.housesConsumer = housesConsumer;
     }
 
