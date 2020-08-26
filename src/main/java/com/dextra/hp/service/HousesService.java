@@ -1,6 +1,6 @@
 package com.dextra.hp.service;
 
-import com.dextra.hp.consumer.HousesFeignRepo;
+import com.dextra.hp.client.HousesFeignRepo;
 import com.dextra.hp.entity.House;
 import com.dextra.hp.exception.UnauthorizedEntityAccessException;
 import com.dextra.hp.repository.HouseRepository;

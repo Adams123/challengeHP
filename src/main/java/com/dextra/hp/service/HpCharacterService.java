@@ -1,7 +1,8 @@
 package com.dextra.hp.service;
 
-import com.dextra.hp.consumer.HpCharactersFeignRepo;
-import com.dextra.hp.controller.dto.CharacterDTO;
+import com.dextra.hp.client.HpCharactersFeignRepo;
+import com.dextra.hp.controller.request.CharacterRequestDTO;
+import com.dextra.hp.controller.response.CharacterResponseDTO;
 import com.dextra.hp.entity.House;
 import com.dextra.hp.entity.HpCharacter;
 import com.dextra.hp.exception.UnauthorizedEntityAccessException;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,11 +40,22 @@ public class HpCharacterService {
         this.housesService = housesService;
     }
 
-    public Page<HpCharacter> findAll(Pageable pageable) {
-        return repository.findAllByDeletedFalse(pageable);
+    @Transactional
+    public Page<CharacterResponseDTO> findAll(Pageable pageable, String houseId) {
+        return repository.findAllByDeletedFalseAndBelongingHouse__id(pageable, houseId).map(CharacterResponseDTO::new);
     }
 
-    public HpCharacter findCharacterById(String characterId) throws UnauthorizedEntityAccessException {
+    @Transactional
+    public Page<CharacterResponseDTO> findAll(Pageable pageable) {
+        return repository.findAllByDeletedFalse(pageable).map(CharacterResponseDTO::new);
+    }
+
+    @Transactional
+    public CharacterResponseDTO findCharacterByIdAsDto(String characterId) throws UnauthorizedEntityAccessException {
+        return new CharacterResponseDTO(findCharacterById(characterId));
+    }
+
+    private HpCharacter findCharacterById(String characterId) throws UnauthorizedEntityAccessException {
         Optional<HpCharacter> characterOpt = repository.findById(characterId);
         if(characterOpt.isPresent()) {
             if (characterOpt.get().isDeleted()) {
@@ -63,27 +76,30 @@ public class HpCharacterService {
         }
     }
 
-    public HpCharacter createCharacter(CharacterDTO dto) throws UnauthorizedEntityAccessException {
+    @Transactional
+    public CharacterResponseDTO createCharacter(CharacterRequestDTO dto) throws UnauthorizedEntityAccessException {
         HpCharacter newCharacter = new HpCharacter(dto);
         House house = housesService.findHouseById(dto.getHouse());
         if(house!=null) {
+            newCharacter.setHouse(house.getName().name());
             newCharacter.setBelongingHouse(house);
         }
-        return repository.save(newCharacter);
+        return new CharacterResponseDTO(repository.save(newCharacter));
     }
 
-    public HpCharacter updateCharacter(CharacterDTO dto) throws UnauthorizedEntityAccessException {
+    @Transactional
+    public CharacterResponseDTO updateCharacter(CharacterRequestDTO dto) throws UnauthorizedEntityAccessException {
         HpCharacter hpCharacter = findCharacterById(dto.getId());
         House house = housesService.findHouseById(dto.getHouse());
         hpCharacter.updateFromDto(dto);
         hpCharacter.setBelongingHouse(house);
         if(house!=null) {
-            hpCharacter.setHouse(house.getName());
+            hpCharacter.setHouse(house.getName().name());
         }
-
-        return repository.save(hpCharacter);
+        return new CharacterResponseDTO(repository.save(hpCharacter));
     }
 
+    @Transactional
     public String deleteCharacter(String id) throws UnauthorizedEntityAccessException {
         HpCharacter character = findCharacterById(id);
         character.setDeleted(true);

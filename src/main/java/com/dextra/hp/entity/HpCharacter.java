@@ -1,6 +1,6 @@
 package com.dextra.hp.entity;
 
-import com.dextra.hp.controller.dto.CharacterDTO;
+import com.dextra.hp.controller.request.CharacterRequestDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -25,7 +25,7 @@ public class HpCharacter extends BaseEntity{
     private String name;
     private String role;
     @Transient
-    private HouseName house;
+    private String house;
     private String school;
     private boolean ministryOfMagic;
     private boolean orderOfThePhoenix;
@@ -33,6 +33,10 @@ public class HpCharacter extends BaseEntity{
     private boolean deathEater;
     private String bloodStatus;
     private String species;
+    private String patronus;
+    private String boggart;
+    private String wand;
+    private String alias;
 
     @ManyToOne
     @JsonIgnore
@@ -46,32 +50,22 @@ public class HpCharacter extends BaseEntity{
             belongingHouse.addMember(   this);
     }
 
-    public HpCharacter(CharacterDTO dto) {
+    public HpCharacter(CharacterRequestDTO dto) {
         this.set_id(StringUtils.defaultString(dto.getId(), UUID.randomUUID().toString()));
         this.set__v(Float.parseFloat(StringUtils.defaultString(dto.get__v(), "0")));
         this.setName(dto.getName());
         this.setRole(dto.getRole());
         this.setSchool(dto.getSchool());
-        this.setMinistryOfMagic(dto.isMinistryOfMagic());
-        this.setOrderOfThePhoenix(dto.isOrderOfThePhoenix());
-        this.setDumbledoresArmy(dto.isDumbledoresArmy());
-        this.setDeathEater(dto.isDeathEater());
-        this.setBloodStatus(dto.getBloodStatus());
-        this.setSpecies(dto.getSpecies());
+        this.setPatronus(dto.getPatronus());
     }
 
-    public void updateFromDto(CharacterDTO dto) {
+    public void updateFromDto(CharacterRequestDTO dto) {
         if(StringUtils.isNotBlank(dto.get__v()))
             this.set__v(Float.parseFloat(dto.get__v()));
 
         this.setName(dto.getName());
         this.setRole(dto.getRole());
         this.setSchool(dto.getSchool());
-        this.setMinistryOfMagic(dto.isMinistryOfMagic());
-        this.setOrderOfThePhoenix(dto.isOrderOfThePhoenix());
-        this.setDumbledoresArmy(dto.isDumbledoresArmy());
-        this.setDeathEater(dto.isDeathEater());
-        this.setBloodStatus(dto.getBloodStatus());
-        this.setSpecies(dto.getSpecies());
+        this.setPatronus(dto.getPatronus());
     }
 }

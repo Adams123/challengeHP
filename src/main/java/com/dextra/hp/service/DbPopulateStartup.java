@@ -1,8 +1,8 @@
 package com.dextra.hp.service;
 
-import com.dextra.hp.consumer.HousesFeignRepo;
-import com.dextra.hp.consumer.HpCharactersFeignRepo;
-import com.dextra.hp.consumer.SpellsFeignRepository;
+import com.dextra.hp.client.HousesFeignRepo;
+import com.dextra.hp.client.HpCharactersFeignRepo;
+import com.dextra.hp.client.SpellsFeignRepository;
 import com.dextra.hp.entity.House;
 import com.dextra.hp.entity.HpCharacter;
 import com.dextra.hp.entity.Populated;
@@ -16,6 +16,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,7 @@ public class DbPopulateStartup implements ApplicationListener<ApplicationReadyEv
     }
 
     @Override
+    @Transactional
     public void onApplicationEvent(ApplicationReadyEvent event) {
         Optional<Populated> populated = populatedRepository.findById(Constants.dbIdentifier);
         if (populated.isPresent() && populated.get().isPopulated()) {
@@ -56,7 +58,7 @@ public class DbPopulateStartup implements ApplicationListener<ApplicationReadyEv
 
             List<HpCharacter> hpCharacters = hpCharactersFeignRepo.getCharacters();
             hpCharacters.forEach(entry -> {
-                entry.defineBelongingHouse(houses.stream().filter(house -> house.getName().equals(entry.getHouse())).findFirst().orElse(null));
+                entry.defineBelongingHouse(houses.stream().filter(house -> house.getName().name().equals(entry.getHouse())).findFirst().orElse(null));
             });
 
             hpCharacterRepository.saveAll(hpCharacters);

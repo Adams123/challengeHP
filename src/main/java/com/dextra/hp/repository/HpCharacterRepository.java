@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface HpCharacterRepository extends JpaRepository<HpCharacter, String>, JpaSpecificationExecutor<String> {
     Page<HpCharacter> findAllByDeletedFalse(Pageable pageable);
+
+    Page<HpCharacter> findAllByDeletedFalseAndBelongingHouse__id(Pageable pageable, String houseId);
 }

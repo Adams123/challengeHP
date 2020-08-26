@@ -1,6 +1,6 @@
 package com.dextra.hp.service;
 
-import com.dextra.hp.consumer.SpellsFeignRepository;
+import com.dextra.hp.client.SpellsFeignRepository;
 import com.dextra.hp.entity.Spell;
 import com.dextra.hp.exception.UnauthorizedEntityAccessException;
 import com.dextra.hp.repository.SpellRepository;
@@ -23,10 +23,10 @@ public class SpellService {
     private final MessageSource messageSource;
 
     public SpellService(SpellRepository repository,
-                        SpellsFeignRepository charactersConsumer,
+                        SpellsFeignRepository charactersClient,
                         MessageSource messageSource) {
         this.repository = repository;
-        this.feignRepository = charactersConsumer;
+        this.feignRepository = charactersClient;
         this.messageSource = messageSource;
     }
 
@@ -34,7 +34,7 @@ public class SpellService {
         return repository.findAll(pageable);
     }
 
-    public Spell findCharacterById(String spellId) throws UnauthorizedEntityAccessException {
+    public Spell findBySpellid(String spellId) throws UnauthorizedEntityAccessException {
         Optional<Spell> spellOpt = repository.findById(spellId);
         if (spellOpt.isPresent()) {
             if (spellOpt.get().isDeleted()) {

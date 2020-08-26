@@ -1,11 +1,10 @@
 package com.dextra.hp.controller;
 
-import com.dextra.hp.controller.dto.CharacterDTO;
-import com.dextra.hp.entity.HpCharacter;
+import com.dextra.hp.controller.request.CharacterRequestDTO;
+import com.dextra.hp.controller.response.CharacterResponseDTO;
 import com.dextra.hp.exception.UnauthorizedEntityAccessException;
 import com.dextra.hp.service.HpCharacterService;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -14,20 +13,17 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/characters")
 public class CharactersControllers {
 
     private final HpCharacterService service;
-    private final MessageSource messageSource;
     private final Validator characterDTOValidator;
 
-    public CharactersControllers(HpCharacterService service, MessageSource messageSource,
+    public CharactersControllers(HpCharacterService service,
                                  @Qualifier("characterDtoValidator") Validator characterDTOValidator) {
         this.service = service;
-        this.messageSource = messageSource;
         this.characterDTOValidator = characterDTOValidator;
     }
 
@@ -37,22 +33,23 @@ public class CharactersControllers {
     }
 
     @GetMapping
-    public ResponseEntity<Page<HpCharacter>> getCharacters(Pageable pageable, @RequestParam Map<String, String> parameters){
-        return ResponseEntity.ok(service.findAll(pageable));
+    public ResponseEntity<Page<CharacterResponseDTO>> getCharacters(Pageable pageable,
+                                                                    @RequestParam(required = false) String houseId){
+        return ResponseEntity.ok(service.findAll(pageable, houseId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HpCharacter> findById(@PathVariable("id") String id) throws UnauthorizedEntityAccessException {
-        return ResponseEntity.ok(service.findCharacterById(id));
+    public ResponseEntity<CharacterResponseDTO> findById(@PathVariable("id") String id) throws UnauthorizedEntityAccessException {
+        return ResponseEntity.ok(service.findCharacterByIdAsDto(id));
     }
 
     @PostMapping
-    public ResponseEntity<HpCharacter> createCharacter(@Valid @RequestBody CharacterDTO dto) throws UnauthorizedEntityAccessException {
+    public ResponseEntity<CharacterResponseDTO> createCharacter(@Valid @RequestBody CharacterRequestDTO dto) throws UnauthorizedEntityAccessException {
         return ResponseEntity.ok(service.createCharacter(dto));
     }
 
     @PutMapping
-    public ResponseEntity<HpCharacter> updateCharacter(@Valid @RequestBody CharacterDTO hpCharacter) throws UnauthorizedEntityAccessException {
+    public ResponseEntity<CharacterResponseDTO> updateCharacter(@Valid @RequestBody CharacterRequestDTO hpCharacter) throws UnauthorizedEntityAccessException {
         return ResponseEntity.ok(service.updateCharacter(hpCharacter));
     }
 

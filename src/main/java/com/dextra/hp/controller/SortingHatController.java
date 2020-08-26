@@ -1,7 +1,8 @@
 package com.dextra.hp.controller;
 
-import com.dextra.hp.consumer.SortingHatFeignRepo;
+import com.dextra.hp.client.SortingHatFeignRepo;
 import com.dextra.hp.entity.HouseName;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,14 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/sortingHat")
 public class SortingHatController {
 
-    public final SortingHatFeignRepo sortingHatConsumer;
+    public final SortingHatFeignRepo sortingHatClient;
 
-    public SortingHatController(SortingHatFeignRepo sortingHatConsumer) {
-        this.sortingHatConsumer = sortingHatConsumer;
+    public SortingHatController(SortingHatFeignRepo sortingHatClient) {
+        this.sortingHatClient = sortingHatClient;
     }
 
     @GetMapping
-    public HouseName getSortingHat(){
-        return sortingHatConsumer.getSortingHat();
+    public ResponseEntity<HouseName> getSortingHat(){
+        return ResponseEntity.ok(sortingHatClient.getSortingHat());
     }
 }

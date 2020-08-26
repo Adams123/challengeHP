@@ -11,7 +11,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.MERGE;
 
 @Data
 @Builder
@@ -32,7 +32,7 @@ public class House extends BaseEntity{
 
     @Transient
     List<String> members;
-    @OneToMany(cascade = ALL, mappedBy = "belongingHouse", orphanRemoval = true)
+    @OneToMany(cascade = MERGE, mappedBy = "belongingHouse", orphanRemoval = true)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     Set<HpCharacter> persistedMembers;

@@ -13,6 +13,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/houses")
 public class HousesController {
+    //TODO create DTOS to return, add bean validation
 
     private final HousesService housesService;
 

@@ -1,6 +1,6 @@
 package com.dextra.hp.controller.validators;
 
-import com.dextra.hp.controller.dto.CharacterDTO;
+import com.dextra.hp.controller.request.CharacterRequestDTO;
 import com.dextra.hp.entity.HpCharacter_;
 import com.dextra.hp.service.HpCharacterService;
 import org.apache.commons.lang3.StringUtils;
@@ -22,12 +22,12 @@ public class CharacterDTOValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return clazz.isAssignableFrom(CharacterDTO.class);
+        return clazz.isAssignableFrom(CharacterRequestDTO.class);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        CharacterDTO dto = (CharacterDTO) target;
+        CharacterRequestDTO dto = (CharacterRequestDTO) target;
         if(StringUtils.isBlank(dto.getName())){
             errors.rejectValue(HpCharacter_.NAME, "blank.name");
         }
