@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PopulatedRepository extends JpaRepository<Populated, String>, JpaSpecificationExecutor<String> {
+public interface PopulatedRepository extends JpaRepository<Populated, String>, JpaSpecificationExecutor<Populated> {
 }

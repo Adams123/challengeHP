@@ -16,11 +16,13 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 import static com.dextra.hp.exception.ExceptionLocalization.CHARACTER_NOT_FOUND_MESSAGE;
 import static com.dextra.hp.exception.ExceptionLocalization.DELETED_ENTITY_MESSAGE;
+import static com.dextra.hp.repository.specification.HpCharacterSpecification.buildFromParamsAndIsNotDeleted;
 
 @Service
 @Slf4j
@@ -41,13 +43,8 @@ public class HpCharacterService {
     }
 
     @Transactional
-    public Page<CharacterResponseDTO> findAll(Pageable pageable, String houseId) {
-        return repository.findAllByDeletedFalseAndBelongingHouse__id(pageable, houseId).map(CharacterResponseDTO::new);
-    }
-
-    @Transactional
-    public Page<CharacterResponseDTO> findAll(Pageable pageable) {
-        return repository.findAllByDeletedFalse(pageable).map(CharacterResponseDTO::new);
+    public Page<CharacterResponseDTO> findAll(Pageable pageable, Map<String, String> params) {
+        return repository.findAll(buildFromParamsAndIsNotDeleted(params), pageable).map(CharacterResponseDTO::new);
     }
 
     @Transactional

@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SpellRepository extends JpaRepository<Spell, String>, JpaSpecificationExecutor<String> {
+public interface SpellRepository extends JpaRepository<Spell, String>, JpaSpecificationExecutor<Spell> {
 
 }

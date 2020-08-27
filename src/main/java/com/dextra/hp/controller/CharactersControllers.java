@@ -13,6 +13,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/characters")
@@ -34,8 +35,9 @@ public class CharactersControllers {
 
     @GetMapping
     public ResponseEntity<Page<CharacterResponseDTO>> getCharacters(Pageable pageable,
-                                                                    @RequestParam(required = false) String houseId){
-        return ResponseEntity.ok(service.findAll(pageable, houseId));
+                                                                    @RequestParam(required = false) Map<String, String> params) {
+        return ResponseEntity.ok(service.findAll(pageable, params));
+
     }
 
     @GetMapping("/{id}")
@@ -53,8 +55,8 @@ public class CharactersControllers {
         return ResponseEntity.ok(service.updateCharacter(hpCharacter));
     }
 
-    @DeleteMapping
-    public ResponseEntity<String> updateCharacter(@RequestParam String id) throws UnauthorizedEntityAccessException {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCharacter(@PathVariable("id") String id) throws UnauthorizedEntityAccessException {
         return ResponseEntity.ok(service.deleteCharacter(id));
     }
 }

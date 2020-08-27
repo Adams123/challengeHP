@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface HouseRepository extends JpaRepository<House, String>, JpaSpecificationExecutor<String> {
+public interface HouseRepository extends JpaRepository<House, String>, JpaSpecificationExecutor<House> {
 
     Optional<House> findHouseByName(String name);
 }

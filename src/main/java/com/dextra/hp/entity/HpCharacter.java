@@ -42,6 +42,7 @@ public class HpCharacter extends BaseEntity{
     @JsonIgnore
     @JoinColumn
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private House belongingHouse;
 
     public void defineBelongingHouse(House belongingHouse) {

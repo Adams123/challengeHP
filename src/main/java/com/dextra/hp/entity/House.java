@@ -35,6 +35,7 @@ public class House extends BaseEntity{
     @OneToMany(cascade = MERGE, mappedBy = "belongingHouse", orphanRemoval = true)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     Set<HpCharacter> persistedMembers;
     @Column
     @Convert(converter = SetConverterString.class)
