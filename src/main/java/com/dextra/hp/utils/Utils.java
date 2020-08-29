@@ -1,8 +1,6 @@
 package com.dextra.hp.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 public class Utils {
@@ -19,7 +17,17 @@ public class Utils {
      */
     public static <T> List<T> orDefaultList(List<T> value) {
         if (value == null) {
-            return new ArrayList<T>();
+            return new ArrayList<>();
+        }
+        return value;
+    }
+
+    /**
+     * @return an editable set if value is null.
+     */
+    public static <T> Set<T> orDefaultSet(Set<T> value) {
+        if (value == null) {
+            return new HashSet<>();
         }
         return value;
     }

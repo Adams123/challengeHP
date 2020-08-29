@@ -1,8 +1,10 @@
 package com.dextra.hp.entity;
 
 import com.dextra.hp.entity.converter.SetConverterString;
+import com.dextra.hp.utils.Utils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
 import org.springframework.util.CollectionUtils;
 
@@ -10,8 +12,9 @@ import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.ALL;
 
 @Data
 @Builder
@@ -32,7 +35,7 @@ public class House extends BaseEntity{
 
     @Transient
     List<String> members;
-    @OneToMany(cascade = MERGE, mappedBy = "belongingHouse", orphanRemoval = true)
+    @OneToMany(cascade = ALL, mappedBy = "belongingHouse", orphanRemoval = true)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -44,8 +47,9 @@ public class House extends BaseEntity{
     @Convert(converter = SetConverterString.class)
     Set<String> colors;
 
-    public Set<HpCharacter> getMembers(){
-        return persistedMembers;
+    @JsonValue
+    public List<String> getMembers(){
+        return Utils.orDefaultSet(persistedMembers).stream().map(HpCharacter::get_id).collect(Collectors.toList());
     }
 
     public void addMember(HpCharacter character) {
@@ -55,4 +59,11 @@ public class House extends BaseEntity{
         persistedMembers.add(character);
         character.setBelongingHouse(this);
     }
+
+    public void setPersistedMembers(Set<HpCharacter> characters){
+        for (HpCharacter character : Utils.orDefaultSet(characters)) {
+            addMember(character);
+        }
+    }
+
 }

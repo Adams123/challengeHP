@@ -14,6 +14,7 @@ import com.dextra.hp.repository.SpellRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -22,6 +23,7 @@ import java.util.Optional;
 
 @Component
 @Slf4j
+@Profile("!test")
 public class DbPopulateStartup implements ApplicationListener<ApplicationReadyEvent> {
 
     private final HpCharactersFeignRepo hpCharactersFeignRepo;

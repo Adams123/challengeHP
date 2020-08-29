@@ -29,17 +29,19 @@ public class HpCharacterSpecification {
 
     public static Specification<HpCharacter> buildFromParams(Map<String, String> params) {
         Specification<HpCharacter> specification = Specification.where(null);
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            switch (entry.getKey()) {
-                case "house":
-                    if (Objects.nonNull(specification)) {
-                        specification = specification.and(hasHouseId(entry.getValue()));
-                    } else {
-                        specification = Specification.where(hasHouseId(entry.getValue()));
-                    }
-                    break;
-                default:
-                    break;
+        if(Objects.nonNull(params)) {
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                switch (entry.getKey()) {
+                    case "house":
+                        if (Objects.nonNull(specification)) {
+                            specification = specification.and(hasHouseId(entry.getValue()));
+                        } else {
+                            specification = Specification.where(hasHouseId(entry.getValue()));
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
         return specification;
