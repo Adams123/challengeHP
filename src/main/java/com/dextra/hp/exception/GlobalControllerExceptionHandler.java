@@ -1,5 +1,7 @@
 package com.dextra.hp.exception;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,14 +17,21 @@ import javax.persistence.EntityNotFoundException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @RestControllerAdvice
 public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
- 
+
+    private final MessageSource messageSource;
+
+    public GlobalControllerExceptionHandler(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+
     @ExceptionHandler(UnauthorizedEntityAccessException.class)
-    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<String> handleConversion(UnauthorizedEntityAccessException ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
     
     @ExceptionHandler(EntityNotFoundException.class)
@@ -54,7 +63,12 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
         apiError.setError("Validation failed");
         List<String> errors = new ArrayList<>();
         BindingResult bindingResult = ex.getBindingResult();
-        bindingResult.getAllErrors().forEach(error -> errors.add(error.getCode()));
+        bindingResult.getAllErrors().forEach(error -> {
+            if(StringUtils.isNotBlank(error.getCode()))
+                errors.add(messageSource.getMessage(error.getCode(), error.getArguments(), Locale.getDefault()));
+            else
+                errors.add(error.getDefaultMessage());
+        });
         apiError.setErrors(errors);
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }

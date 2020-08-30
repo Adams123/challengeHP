@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <hp_character
+            _id="some_id"
+            name="some name"
+            __v="0.0"
+            belonging_house__id="gryffindor_id"
+            deleted="false"
+    />
+    <hp_character
+            _id="other_id"
+            name="some other name"
+            __v="0.0"
+            belonging_house__id="slytherin_id"
+            deleted="false"
+    />
+    <hp_character
+            _id="third_id"
+            name="third name"
+            __v="0.0"
+            belonging_house__id="ravenclaw_id"
+            deleted="false"
+    />
+    <hp_character
+            _id="deleted_id"
+            name="deleted name"
+            __v="0.0"
+            belonging_house__id="gryffindor_id"
+            deleted="true"
+    />
+    <house
+            _id="gryffindor_id"
+            name="Gryffindor"
+            __v="0.0"
+            deleted="false"
+    />
+    <house
+            _id="slytherin_id"
+            name="Slytherin"
+            __v="0.0"
+            deleted="false"
+    />
+    <house
+            _id="ravenclaw_id"
+            name="Ravenclaw"
+            __v="0.0"
+            deleted="false"
+    />
+    <house
+            _id="hufflepuff_id"
+            name="Hufflepuff"
+            __v="0.0"
+            deleted="false"
+    />
+
+</dataset>

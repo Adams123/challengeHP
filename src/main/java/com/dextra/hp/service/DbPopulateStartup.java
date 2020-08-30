@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @Component
 @Slf4j
-@Profile("!test")
+@Profile("default")
 public class DbPopulateStartup implements ApplicationListener<ApplicationReadyEvent> {
 
     private final HpCharactersFeignRepo hpCharactersFeignRepo;

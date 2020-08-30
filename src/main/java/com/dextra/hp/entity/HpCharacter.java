@@ -27,10 +27,10 @@ public class HpCharacter extends BaseEntity{
     @Transient
     private String house;
     private String school;
-    private boolean ministryOfMagic;
-    private boolean orderOfThePhoenix;
-    private boolean dumbledoresArmy;
-    private boolean deathEater;
+    private Boolean ministryOfMagic = false;
+    private Boolean orderOfThePhoenix = false;
+    private Boolean dumbledoresArmy = false;
+    private Boolean deathEater = false;
     private String bloodStatus;
     private String species;
     private String patronus;

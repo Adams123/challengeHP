@@ -63,9 +63,12 @@ public class HpCharacterService {
             return characterOpt.get();
         }
         else {
+            log.debug("Character {} not found, looking for it on API", characterId);
             HpCharacter hpCharacter = feignRepository.getCharacter(characterId);
             if(Objects.nonNull(hpCharacter)) {
-                return hpCharacter;
+                log.debug("Character {} found on API, updating db", characterId);
+                hpCharacter.setBelongingHouse(housesService.findHouseById(hpCharacter.getHouse()));
+                return repository.save(hpCharacter);
             } else {
                 String message = messageSource.getMessage(CHARACTER_NOT_FOUND_MESSAGE, new String[] {characterId}, null, Locale.getDefault());
                 throw new EntityNotFoundException(message);
@@ -100,7 +103,6 @@ public class HpCharacterService {
     public String deleteCharacter(String id) throws UnauthorizedEntityAccessException {
         HpCharacter character = findCharacterById(id);
         character.setDeleted(true);
-        character.getBelongingHouse().getPersistedMembers().remove(character);
         repository.save(character);
         return character.getName();
     }

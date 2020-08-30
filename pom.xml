@@ -139,6 +139,11 @@
 			<artifactId>spring-test-dbunit-core</artifactId>
 			<version>5.2.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.github.database-rider</groupId>
+			<artifactId>rider-spring</artifactId>
+			<version>1.16.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>

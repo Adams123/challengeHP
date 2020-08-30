@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
+import org.hibernate.annotations.Where;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
@@ -39,6 +40,7 @@ public class House extends BaseEntity{
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @Where(clause = "deleted = false")
     Set<HpCharacter> persistedMembers;
     @Column
     @Convert(converter = SetConverterString.class)

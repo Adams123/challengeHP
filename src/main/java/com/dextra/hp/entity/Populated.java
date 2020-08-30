@@ -14,5 +14,5 @@ import javax.persistence.Id;
 public class Populated {
     @Id
     private String dbId;
-    private boolean populated;
+    private boolean populated = false;
 }

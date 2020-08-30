@@ -22,5 +22,5 @@ public class BaseEntity {
     @Column
     private boolean deleted;
 
-    private float __v;
+    private Float __v = (float) 0;
 }

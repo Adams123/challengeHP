@@ -12,7 +12,7 @@ public class AppConfig {
     @Bean
     public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource source = new ResourceBundleMessageSource();
-        source.setBasenames("i18n/messages"); //TODO move to properties
+        source.setBasenames("i18n/messages"); //TODO path move to properties
         source.setUseCodeAsDefaultMessage(true);
         return source;
     }
