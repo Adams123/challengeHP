@@ -50,26 +50,24 @@ public class DbPopulateStartup implements ApplicationListener<ApplicationReadyEv
     @Override
     @Transactional
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        Optional<Populated> populated = populatedRepository.findById(Constants.dbIdentifier);
+        Optional<Populated> populated = populatedRepository.findById(Constants.DB_IDENTIFIER);
         if (populated.isPresent() && populated.get().isPopulated()) {
-            log.debug("DB for {} is already populated, skipping", Constants.dbIdentifier);
+            log.debug("DB for {} is already populated, skipping", Constants.DB_IDENTIFIER);
             return;
         }
         try {
             List<House> houses = houseRepository.saveAll(housesFeignRepo.getHouses());
 
             List<HpCharacter> hpCharacters = hpCharactersFeignRepo.getCharacters();
-            hpCharacters.forEach(entry -> {
-                entry.defineBelongingHouse(houses.stream().filter(house -> house.getName().name().equals(entry.getHouse())).findFirst().orElse(null));
-            });
+            hpCharacters.forEach(entry -> entry.defineBelongingHouse(houses.stream().filter(house -> house.getName().name().equals(entry.getHouse())).findFirst().orElse(null)));
 
             hpCharacterRepository.saveAll(hpCharacters);
             spellRepository.saveAll(spellsFeignRepository.getSpells());
-            populatedRepository.save(new Populated(Constants.dbIdentifier, true));
-            log.debug("DB {} populated successfully", Constants.dbIdentifier);
+            populatedRepository.save(new Populated(Constants.DB_IDENTIFIER, true));
+            log.debug("DB {} populated successfully", Constants.DB_IDENTIFIER);
 
         } catch (Exception e) {
-            populatedRepository.save(new Populated(Constants.dbIdentifier, false));
+            populatedRepository.save(new Populated(Constants.DB_IDENTIFIER, false));
             log.error("Failed to initialize db repository with API data.", e);
         }
     }

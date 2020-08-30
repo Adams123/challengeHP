@@ -1,21 +1,24 @@
 package com.dextra.hp.utils;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.*;
 
 
+@UtilityClass
 public class Utils {
 
     /**
      * @return ifNull value is value is null
      */
-    public static <T> T orDefault(T value, T ifNull) {
+    public <T> T orDefault(T value, T ifNull) {
         return Objects.isNull(value) ? ifNull : value;
     }
 
     /**
      * @return an editable list if value is null.
      */
-    public static <T> List<T> orDefaultList(List<T> value) {
+    public <T> List<T> orDefaultList(List<T> value) {
         if (value == null) {
             return new ArrayList<>();
         }
@@ -25,7 +28,7 @@ public class Utils {
     /**
      * @return an editable set if value is null.
      */
-    public static <T> Set<T> orDefaultSet(Set<T> value) {
+    public <T> Set<T> orDefaultSet(Set<T> value) {
         if (value == null) {
             return new HashSet<>();
         }

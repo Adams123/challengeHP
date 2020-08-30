@@ -2,6 +2,8 @@ package com.dextra.hp.exception;
 
 public class ExceptionLocalization {
 
+    private ExceptionLocalization(){}
+
     public static final String CHARACTER_NOT_FOUND_MESSAGE = "character.notFound";
     public static final String HOUSE_NOT_FOUND_MESSAGE = "house.notFound";
     public static final String SPELL_NOT_FOUND_MESSAGE = "spell.notFound";

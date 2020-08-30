@@ -1,5 +1,7 @@
 package com.dextra.hp.exception;
 
+import io.swagger.v3.oas.annotations.Hidden;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.Locale;
 
 @RestControllerAdvice
+@Slf4j
+@Hidden
 public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final MessageSource messageSource;
@@ -49,6 +53,7 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
     @ExceptionHandler(SocketTimeoutException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<String> handleNoInternetException(SocketTimeoutException ex) {
+        log.error("SocketTimeoutException happened, check feign client requests: ", ex);
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -65,7 +70,7 @@ public class GlobalControllerExceptionHandler extends ResponseEntityExceptionHan
         BindingResult bindingResult = ex.getBindingResult();
         bindingResult.getAllErrors().forEach(error -> {
             if(StringUtils.isNotBlank(error.getCode()))
-                errors.add(messageSource.getMessage(error.getCode(), error.getArguments(), Locale.getDefault()));
+                errors.add(messageSource.getMessage(error.getCode(), error.getArguments(), error.getDefaultMessage(), Locale.getDefault()));
             else
                 errors.add(error.getDefaultMessage());
         });

@@ -1,4 +1,4 @@
-package com.dextra.hp;
+package com.dextra.hp.integration;
 
 
 import com.dextra.hp.config.FeignInterceptor;

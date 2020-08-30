@@ -8,6 +8,7 @@ import com.dextra.hp.entity.HpCharacter;
 import com.dextra.hp.exception.UnauthorizedEntityAccessException;
 import com.dextra.hp.repository.HpCharacterRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,7 +66,8 @@ public class HpCharacterService {
         else {
             log.debug("Character {} not found, looking for it on API", characterId);
             HpCharacter hpCharacter = feignRepository.getCharacter(characterId);
-            if(Objects.nonNull(hpCharacter)) {
+            if(Objects.nonNull(hpCharacter) &&
+                    !StringUtils.equals(hpCharacter.getName(),"CastError")) { //API returns weird response when character is not found...
                 log.debug("Character {} found on API, updating db", characterId);
                 hpCharacter.setBelongingHouse(housesService.findHouseById(hpCharacter.getHouse()));
                 return repository.save(hpCharacter);

@@ -1,4 +1,4 @@
-package com.dextra.hp;
+package com.dextra.hp.integration;
 
 import com.dextra.hp.client.HpCharactersFeignRepo;
 import com.dextra.hp.controller.request.CharacterRequestDTO;
@@ -31,7 +31,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 
-public class HpCharacterServiceTest extends BaseIntegrationTestingSetup {
+class HpCharacterServiceIntegrationTest extends BaseIntegrationTestingSetup {
 
     @Autowired
     private HpCharacterRepository repository;
@@ -48,7 +48,7 @@ public class HpCharacterServiceTest extends BaseIntegrationTestingSetup {
 
     @Test
     @DataSet(value = "characters.xml")
-    public void deletedCharacterIsNotDisplayed() {
+    void deletedCharacterIsNotDisplayed() {
 
         Page<CharacterResponseDTO> hpCharacters = service.findAll(PageRequest.of(0, 10), null);
         assertThat(hpCharacters.getTotalElements()).isOne();
@@ -66,7 +66,7 @@ public class HpCharacterServiceTest extends BaseIntegrationTestingSetup {
 
     @Test
     @DataSet(value = "characters.xml")
-    public void characterIsFilteredByHouse(){
+    void characterIsFilteredByHouse(){
         Map<String, String> params = new HashMap<>();
         params.put("house", "gryffindor_id");
         Page<CharacterResponseDTO> characters = service.findAll(PageRequest.of(0, 10), params);
@@ -80,7 +80,7 @@ public class HpCharacterServiceTest extends BaseIntegrationTestingSetup {
 
     @Test
     @DataSet(value = "characters.xml")
-    public void accessingDeletedEntityThrowsException() {
+    void accessingDeletedEntityThrowsException() {
         Exception exception =
                 assertThrows(UnauthorizedEntityAccessException.class, () -> service.findCharacterByIdAsDto("deleted_id"));
         assertThatEntityIsNotAllowedToBeAccessed("deleted_id", exception);
@@ -88,7 +88,7 @@ public class HpCharacterServiceTest extends BaseIntegrationTestingSetup {
 
     @Test
     @DataSet(value = "characters.xml")
-    public void createNewCharacter() throws UnauthorizedEntityAccessException {
+    void createNewCharacter() throws UnauthorizedEntityAccessException {
         CharacterRequestDTO dto = CharacterRequestDTO.builder().id("new id").house("slytherin_id").name("new name").__v("1.0").build();
         CharacterResponseDTO created = service.createCharacter(dto);
 
@@ -105,7 +105,7 @@ public class HpCharacterServiceTest extends BaseIntegrationTestingSetup {
 
     @Test
     @DataSet(value = "characters.xml")
-    public void updateNewCharacter() throws UnauthorizedEntityAccessException {
+    void updateNewCharacter() throws UnauthorizedEntityAccessException {
         CharacterRequestDTO dto = CharacterRequestDTO.builder().id("some_id").house("slytherin_id").name("new name").__v("1.0").build();
         CharacterResponseDTO updatedDto = service.updateCharacter(dto);
 
@@ -120,7 +120,7 @@ public class HpCharacterServiceTest extends BaseIntegrationTestingSetup {
     @Test
     @DataSet(value = "characters.xml")
     @Transactional
-    public void deleteCharacter() throws UnauthorizedEntityAccessException {
+    void deleteCharacter() throws UnauthorizedEntityAccessException {
         House house = houseRepository.findById("gryffindor_id").get();
         HpCharacter character = house.getPersistedMembers().stream().findFirst().get();
         assertThat(character.get_id()).isEqualTo("some_id");
@@ -135,7 +135,7 @@ public class HpCharacterServiceTest extends BaseIntegrationTestingSetup {
         TestTransaction.start();
 
         house = houseRepository.findById("gryffindor_id").get();
-        assertThat(house.getPersistedMembers()).hasSize(0);
+        assertThat(house.getPersistedMembers()).isEmpty();
 
         Exception deleteAgainException =
                 assertThrows(UnauthorizedEntityAccessException.class, () -> service.deleteCharacter("some_id"));
@@ -149,7 +149,7 @@ public class HpCharacterServiceTest extends BaseIntegrationTestingSetup {
 
     @Test
     @DataSet(value = "characters.xml")
-    public void characterNotFoundOnDbIsFetchedFromAPI() throws UnauthorizedEntityAccessException {
+    void characterNotFoundOnDbIsFetchedFromAPI() throws UnauthorizedEntityAccessException {
         HpCharacter hpCharacter = new HpCharacter();
         hpCharacter.set_id("id from API");
         hpCharacter.setHouse("hufflepuff_id");
@@ -165,7 +165,7 @@ public class HpCharacterServiceTest extends BaseIntegrationTestingSetup {
 
     @Test
     @DataSet(value = "characters.xml")
-    public void characterNotFoundThrowsException(){
+    void characterNotFoundThrowsException(){
         Exception exception = assertThrows(EntityNotFoundException.class, () -> service.findCharacterByIdAsDto("no id"));
         String message = messageSource.getMessage(CHARACTER_NOT_FOUND_MESSAGE, new String[]{"no id"}, null, Locale.getDefault());
         assertThat(exception.getMessage()).isEqualTo(message);

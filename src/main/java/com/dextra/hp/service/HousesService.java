@@ -51,9 +51,12 @@ public class HousesService {
             }
             return houseOpt.get();
         }else {
+            log.debug("House {} not found, looking for it on API", houseId);
             House house = feignRepository.getHouse(houseId);
-            if(Objects.nonNull(house)) {
-                return house;
+            if(Objects.nonNull(house) &&
+                    !StringUtils.equals(house.get_id(),"CastError")) { //API returns weird response when character is not found...
+                log.debug("House {} found on API, updating db", houseId);
+                return repository.save(house);
             } else {
                 String message = messageSource.getMessage(HOUSE_NOT_FOUND_MESSAGE, new String[] {houseId}, null, Locale.getDefault());
                 throw new EntityNotFoundException(message);

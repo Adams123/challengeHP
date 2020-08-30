@@ -1,4 +1,4 @@
-package com.dextra.hp;
+package com.dextra.hp.integration;
 
 import com.dextra.hp.controller.request.CharacterRequestDTO;
 import com.dextra.hp.entity.House;
@@ -30,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-public class HpCharacterControllerTest extends BaseIntegrationTestingSetup {
+class HpCharacterControllerIntegrationTest extends BaseIntegrationTestingSetup {
 
     @Autowired
     private MockMvc mockMvc;
@@ -48,7 +48,7 @@ public class HpCharacterControllerTest extends BaseIntegrationTestingSetup {
 
     @Test
     @DataSet(value = "characters_controller.xml")
-    public void findAllReturnsCorrectDTO() throws Exception {
+    void findAllReturnsCorrectDTO() throws Exception {
         mockMvc.perform(get("/api/characters/"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.numberOfElements").value(3)) //should not return deleted
@@ -63,7 +63,7 @@ public class HpCharacterControllerTest extends BaseIntegrationTestingSetup {
 
     @Test
     @DataSet(value = "characters_controller.xml")
-    public void filteringReturnsCorrectCharacters() throws Exception {
+    void filteringReturnsCorrectCharacters() throws Exception {
         mockMvc.perform(get("/api/characters/").queryParam("house", "slytherin_id"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.numberOfElements").value(1))
@@ -74,7 +74,7 @@ public class HpCharacterControllerTest extends BaseIntegrationTestingSetup {
     @Test
     @DataSet(value = "characters_controller.xml")
     @Transactional
-    public void filteringAndSortingReturnsCorrectCharacters() throws Exception {
+    void filteringAndSortingReturnsCorrectCharacters() throws Exception {
         House slytherinHouse = houseRepository.findById("slytherin_id").get();
         List<String> names = Stream.of("one name", "two name", "dont know", "test name").collect(Collectors.toList());
         List<HpCharacter> characters = new ArrayList<>();
@@ -116,7 +116,7 @@ public class HpCharacterControllerTest extends BaseIntegrationTestingSetup {
 
     @Test
     @DataSet(value = "characters_controller.xml")
-    public void accessingDeletedEntityIsNotAllowed() throws Exception {
+    void accessingDeletedEntityIsNotAllowed() throws Exception {
         String message = messageSource.getMessage(DELETED_ENTITY_MESSAGE, new String[]{"deleted_id"}, null, Locale.getDefault());
         mockMvc.perform(get("/api/characters/deleted_id"))
                 .andDo(print())
@@ -126,8 +126,8 @@ public class HpCharacterControllerTest extends BaseIntegrationTestingSetup {
 
     @Test
     @DataSet(value = "characters_controller.xml")
-    public void createCharacter() throws Exception {
-        CharacterRequestDTO dto = CharacterRequestDTO.builder().id("random id").name("random name").house("ravenclaw_id").__v("0").build();
+    void createCharacter() throws Exception {
+        CharacterRequestDTO dto = CharacterRequestDTO.builder().id("random_id").name("random name").house("ravenclaw_id").__v("0").build();
 
         mockMvc.perform(post("/api/characters")
                 .content(objectMapper.writeValueAsString(dto))
@@ -144,8 +144,8 @@ public class HpCharacterControllerTest extends BaseIntegrationTestingSetup {
 
     @Test
     @DataSet(value = "characters_controller.xml")
-    public void cannotCreateCharacterWithoutName() throws Exception {
-        CharacterRequestDTO dto = CharacterRequestDTO.builder().id("random id").house("ravenclaw_id").__v("0").build();
+    void cannotCreateCharacterWithoutName() throws Exception {
+        CharacterRequestDTO dto = CharacterRequestDTO.builder().id("random_id").house("ravenclaw_id").__v("0").build();
         String message = messageSource.getMessage("field.required", new String[]{"name"}, Locale.getDefault());
 
         mockMvc.perform(post("/api/characters")
