@@ -12,6 +12,7 @@ import com.dextra.hp.repository.HpCharacterRepository;
 import com.dextra.hp.repository.PopulatedRepository;
 import com.dextra.hp.repository.SpellRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
@@ -19,7 +20,9 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -57,9 +60,11 @@ public class DbPopulateStartup implements ApplicationListener<ApplicationReadyEv
         }
         try {
             List<House> houses = houseRepository.saveAll(housesFeignRepo.getHouses());
+            Map<String, List<House>> houseNames = houses.stream().collect(Collectors.groupingBy(house -> house.getName().name()));
 
             List<HpCharacter> hpCharacters = hpCharactersFeignRepo.getCharacters();
-            hpCharacters.forEach(entry -> entry.defineBelongingHouse(houses.stream().filter(house -> house.getName().name().equals(entry.getHouse())).findFirst().orElse(null)));
+            hpCharacters.stream().filter(entry -> StringUtils.isNotBlank(entry.getHouse())).forEach(entry ->
+                    entry.setBelongingHouse(houseNames.get(entry.getHouse()).get(0)));
 
             hpCharacterRepository.saveAll(hpCharacters);
             spellRepository.saveAll(spellsFeignRepository.getSpells());

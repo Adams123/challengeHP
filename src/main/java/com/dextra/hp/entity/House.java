@@ -39,19 +39,19 @@ public class House extends BaseEntity{
     private String school;
 
     @Transient
-    List<String> members;
+    private List<String> members;
     @OneToMany(cascade = ALL, mappedBy = "belongingHouse", orphanRemoval = true)
     @JsonIgnore
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @Where(clause = "deleted = false")
-    Set<HpCharacter> persistedMembers;
+    private Set<HpCharacter> persistedMembers;
     @Column
     @Convert(converter = SetConverterString.class)
-    Set<String> values;
+    private Set<String> values;
     @Column
     @Convert(converter = SetConverterString.class)
-    Set<String> colors;
+    private Set<String> colors;
 
     @JsonValue
     public List<String> getMembers(){

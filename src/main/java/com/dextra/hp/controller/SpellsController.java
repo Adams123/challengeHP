@@ -1,5 +1,6 @@
 package com.dextra.hp.controller;
 
+import com.dextra.hp.controller.response.SpellResponseDTO;
 import com.dextra.hp.entity.Spell;
 import com.dextra.hp.exception.UnauthorizedEntityAccessException;
 import com.dextra.hp.service.SpellService;
@@ -38,23 +39,23 @@ public class SpellsController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List of spells",
                     content = {@Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = Spell.class)))})
+                            array = @ArraySchema(schema = @Schema(implementation = SpellResponseDTO.class)))})
     })
-    public ResponseEntity<Page<Spell>> getSpells(Pageable pageable){
-        return ResponseEntity.ok(spellService.findAll(pageable));
+    public ResponseEntity<Page<SpellResponseDTO>> getSpells(Pageable pageable){
+        return ResponseEntity.ok(spellService.findAll(pageable).map(SpellResponseDTO::new));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Find spell by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Found the spell",
-                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = Spell.class))}),
+                    content = {@Content(mediaType = "application/json", schema = @Schema(implementation = SpellResponseDTO.class))}),
             @ApiResponse(responseCode = "403", description = "Unauthorized access to deleted entity",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class))}),
             @ApiResponse(responseCode = "404", description = "Entity not found",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class))})
     })
-    public ResponseEntity<Spell> getSpell(String id) throws UnauthorizedEntityAccessException {
-        return ResponseEntity.ok(spellService.findBySpellId(id));
+    public ResponseEntity<SpellResponseDTO> getSpell(String id) throws UnauthorizedEntityAccessException {
+        return ResponseEntity.ok(new SpellResponseDTO(spellService.findBySpellId(id)));
     }
 }
