@@ -8,6 +8,7 @@ import com.dextra.hp.exception.UnauthorizedEntityAccessException;
 import com.dextra.hp.service.HpCharacterService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -52,8 +53,10 @@ public class CharacterController {
                     content = {@Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = CharacterResponseDTO.class)))})
     })
-    public ResponseEntity<Page<CharacterResponseDTO>> getCharacters(Pageable pageable,
-                                                                    @RequestParam(required = false) Map<String, String> params) {
+    public ResponseEntity<Page<CharacterResponseDTO>> getCharacters(
+            Pageable pageable,
+            @Parameter(name = "house", description = "House id to be filtered",content = {@Content(schema = @Schema(implementation = String.class))})
+            @RequestParam(required = false) Map<String, String> params) {
         return ResponseEntity.ok(service.findAll(pageable, params));
     }
 
@@ -67,7 +70,9 @@ public class CharacterController {
             @ApiResponse(responseCode = "404", description = "Entity not found",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class))})
     })
-    public ResponseEntity<CharacterResponseDTO> findById(@PathVariable("id") String id) throws UnauthorizedEntityAccessException {
+    public ResponseEntity<CharacterResponseDTO> findById(
+            @Parameter(description = "The character id") @PathVariable("id") String id
+    ) throws UnauthorizedEntityAccessException {
         return ResponseEntity.ok(service.findCharacterByIdAsDto(id));
     }
 
@@ -79,7 +84,9 @@ public class CharacterController {
             @ApiResponse(responseCode = "400", description = "Invalid parameters supplied",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ApiError.class))}),
     })
-    public ResponseEntity<CharacterResponseDTO> createCharacter(@Valid @RequestBody CharacterRequestDTO dto) throws UnauthorizedEntityAccessException {
+    public ResponseEntity<CharacterResponseDTO> createCharacter(
+            @Parameter(description = "The character information") @Valid @RequestBody CharacterRequestDTO dto
+    ) throws UnauthorizedEntityAccessException {
         return ResponseEntity.ok(service.createCharacter(dto));
     }
 
@@ -95,7 +102,9 @@ public class CharacterController {
             @ApiResponse(responseCode = "404", description = "Entity not found",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class))})
     })
-    public ResponseEntity<CharacterResponseDTO> updateCharacter(@Valid @RequestBody CharacterRequestDTO hpCharacter) throws UnauthorizedEntityAccessException {
+    public ResponseEntity<CharacterResponseDTO> updateCharacter(
+            @Parameter(description = "The character information") @Valid @RequestBody CharacterRequestDTO hpCharacter
+    ) throws UnauthorizedEntityAccessException {
         return ResponseEntity.ok(service.updateCharacter(hpCharacter));
     }
 
@@ -109,7 +118,9 @@ public class CharacterController {
             @ApiResponse(responseCode = "404", description = "Entity not found",
                     content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ResponseEntity.class))})
     })
-    public ResponseEntity<String> deleteCharacter(@PathVariable("id") String id) throws UnauthorizedEntityAccessException {
+    public ResponseEntity<String> deleteCharacter(
+            @Parameter(description = "The character id") @PathVariable("id") String id
+    ) throws UnauthorizedEntityAccessException {
         return ResponseEntity.ok(service.deleteCharacter(id));
     }
 }

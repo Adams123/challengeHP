@@ -5,11 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -21,6 +20,8 @@ import java.util.UUID;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class HpCharacter extends BaseEntity{
     private String name;
     private String role;

@@ -144,6 +144,18 @@
 			<artifactId>rider-spring</artifactId>
 			<version>1.16.0</version>
 		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.10.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-ehcache</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+
+
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>

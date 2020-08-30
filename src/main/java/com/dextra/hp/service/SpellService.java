@@ -15,7 +15,8 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Locale;
 import java.util.Optional;
 
-import static com.dextra.hp.exception.ExceptionLocalization.*;
+import static com.dextra.hp.exception.ExceptionLocalization.DELETED_ENTITY_MESSAGE;
+import static com.dextra.hp.exception.ExceptionLocalization.SPELL_NOT_FOUND_MESSAGE;
 
 @Service
 @Slf4j

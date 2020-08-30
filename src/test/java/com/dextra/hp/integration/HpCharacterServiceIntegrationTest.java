@@ -153,6 +153,8 @@ class HpCharacterServiceIntegrationTest extends BaseIntegrationTestingSetup {
         HpCharacter hpCharacter = new HpCharacter();
         hpCharacter.set_id("id from API");
         hpCharacter.setHouse("hufflepuff_id");
+
+        assertThat(repository.findById("id from API")).isNotPresent();
         doReturn(hpCharacter).when(hpCharactersFeignRepo).getCharacter("id from API");
 
         CharacterResponseDTO created = service.findCharacterByIdAsDto("id from API");

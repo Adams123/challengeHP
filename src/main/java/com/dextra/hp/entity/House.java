@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Where;
 import org.springframework.util.CollectionUtils;
 
@@ -25,6 +27,8 @@ import static javax.persistence.CascadeType.ALL;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class House extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private HouseName name;

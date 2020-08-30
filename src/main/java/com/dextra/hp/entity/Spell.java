@@ -2,7 +2,10 @@ package com.dextra.hp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Entity;
 
 @Data
@@ -13,6 +16,8 @@ import javax.persistence.Entity;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Spell extends BaseEntity{
     private String spell;
     private String type;
