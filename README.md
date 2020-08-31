@@ -5,7 +5,7 @@ Backend realizado para o desafio dextra
 # Inicialização
 ## Docker
 Para inicializar a aplicação em docker, use:
->docker pull adamssilva/hp_app:firsttry
+>docker pull adamssilva/hp_app:stable
 >docker-compose up
 
 A aplicação por padrão está em 0.0.0.0:3000. Um arquivo .env está disponível, contendo uma chave de autenticação da Potter API. Caso queira, pode substituir pela sua.
